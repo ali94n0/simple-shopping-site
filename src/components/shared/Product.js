@@ -1,14 +1,23 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { CartContext } from "../../context/CartContextProvider";
+// import { CartContext } from "../../context/CartContextProvider";
 import Styles from "./Product.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addItem,
+  decrease,
+  increase,
+  removeItem,
+} from "../../redux/cards/cardAction";
 import { BiTrash } from "react-icons/bi";
 
 // Functions
 import { shorten, isInCart, quantityCount } from "../../helper/functions";
 
 const Product = ({ productData }) => {
-  const { state, dispatch } = useContext(CartContext);
+  // const { state, dispatch } = useContext(CartContext);
+  const dispatch = useDispatch();
+  const cardState = useSelector((state) => state.card);
   return (
     <div className={Styles.container}>
       <img src={productData.image} alt="product" className={Styles.cardImage} />
@@ -17,47 +26,37 @@ const Product = ({ productData }) => {
       <div className={Styles.linkContainer}>
         <Link to={`/products/${productData.id}`}>Details</Link>
         <div className={Styles.buttonContainer}>
-          {isInCart(state, productData.id) ? (
+          {isInCart(cardState, productData.id) ? (
             <button
-              onClick={() =>
-                dispatch({ type: "INCREASE", payload: productData })
-              }
+              onClick={() => dispatch(increase(productData))}
               className={Styles.smallButton}
             >
               +
             </button>
           ) : (
-            <button
-              onClick={() =>
-                dispatch({ type: "ADD_ITEM", payload: productData })
-              }
-            >
+            <button onClick={() => dispatch(addItem(productData))}>
               add in cart
             </button>
           )}
-          {isInCart(state, productData.id) &&
-            quantityCount(state, productData.id) > 0 && (
+          {isInCart(cardState, productData.id) &&
+            quantityCount(cardState, productData.id) > 0 && (
               <span className={Styles.counter}>
-                {quantityCount(state, productData.id)}
+                {quantityCount(cardState, productData.id)}
               </span>
             )}
 
-          {quantityCount(state, productData.id) === 1 && (
+          {quantityCount(cardState, productData.id) === 1 && (
             <button
-              onClick={() =>
-                dispatch({ type: "REMOVE_ITEM", payload: productData })
-              }
+              onClick={() => dispatch(removeItem(productData))}
               className={Styles.smallButton}
             >
               <BiTrash className={Styles.trashIcon} />
             </button>
           )}
 
-          {quantityCount(state, productData.id) > 1 && (
+          {quantityCount(cardState, productData.id) > 1 && (
             <button
-              onClick={() =>
-                dispatch({ type: "DECREASE", payload: productData })
-              }
+              onClick={() => dispatch(decrease(productData))}
               className={Styles.smallButton}
             >
               -

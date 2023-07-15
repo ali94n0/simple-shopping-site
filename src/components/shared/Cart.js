@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import { shorten } from "../../helper/functions";
-import { CartContext } from "../../context/CartContextProvider";
+// import { CartContext } from "../../context/CartContextProvider";
 import { BiTrash } from "react-icons/bi";
 import Styles from "./Cart.module.css";
+import { useDispatch } from "react-redux";
+import { decrease, increase, removeItem } from "../../redux/cards/cardAction";
 
 function Cart(props) {
   const { image, title, quantity, price } = props.data;
-  const { dispatch } = useContext(CartContext);
+  const dispatch = useDispatch();
   return (
     <div className={Styles.container}>
       <img src={image} alt={title} className={Styles.productImage}></img>
@@ -18,25 +20,13 @@ function Cart(props) {
         <span>{quantity}</span>
       </div>
       <div className={Styles.buttonContainer}>
-        <button
-          onClick={() => dispatch({ type: "INCREASE", payload: props.data })}
-        >
-          +
-        </button>
+        <button onClick={() => dispatch(increase(props.data))}>+</button>
         {quantity === 1 ? (
-          <button
-            onClick={() =>
-              dispatch({ type: "REMOVE_ITEM", payload: props.data })
-            }
-          >
+          <button onClick={() => dispatch(removeItem(props.data))}>
             <BiTrash className={Styles.trashIcon} />
           </button>
         ) : (
-          <button
-            onClick={() => dispatch({ type: "DECREASE", payload: props.data })}
-          >
-            -
-          </button>
+          <button onClick={() => dispatch(decrease(props.data))}>-</button>
         )}
       </div>
     </div>

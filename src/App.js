@@ -6,14 +6,17 @@ import Store from "./components/Store";
 import ProductDetails from "./components/ProductDetails";
 
 // Context
-import ProductsContextProvider from "./context/ProductsContextProvider";
+// import ProductsContextProvider from "./context/ProductsContextProvider";
 import CartContextProvider from "./context/CartContextProvider";
 import Navbar from "./components/shared/Navbar";
 import CartShop from "./components/CartShop";
+import { Provider } from "react-redux";
+
+import { store } from "./redux/store";
 
 function App() {
   return (
-    <ProductsContextProvider>
+    <Provider store={store}>
       <CartContextProvider>
         <Navbar />
         <Routes>
@@ -23,7 +26,7 @@ function App() {
           <Route path="/" element={<Navigate to={"/products"} />} />
         </Routes>
       </CartContextProvider>
-    </ProductsContextProvider>
+    </Provider>
   );
 }
 

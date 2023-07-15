@@ -1,52 +1,52 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { CartContext } from "../context/CartContextProvider";
+// import { CartContext } from "../context/CartContextProvider";
 import Cart from "./shared/Cart";
 import Styles from "./CartShop.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { checkout, clear } from "../redux/cards/cardAction";
 
 function CartShop(props) {
-  const { state, dispatch } = useContext(CartContext);
+  const dispatch = useDispatch();
+  const cardState = useSelector((state) => state.card);
 
   return (
     <div className={Styles.container}>
       <div className={Styles.cartContainer}>
-        {state.selectedItems.map((item) => (
+        {cardState.selectedItems.map((item) => (
           <Cart key={item.id} data={item} />
         ))}
       </div>
-      {state.itemsCount > 0 && (
+      {cardState.itemsCount > 0 && (
         <div className={Styles.payments}>
           <p>
             <span>Total Items : </span>
-            {state.itemsCount}
+            {cardState.itemsCount}
           </p>
           <p>
             <span>Total Payment : </span>
-            {state.totalPrice}
+            {cardState.totalPrice}
           </p>
           <div className={Styles.buttonContainer}>
             <button
-              onClick={() => dispatch({ type: "CHECKOUT" })}
+              onClick={() => dispatch(checkout())}
               className={Styles.checkout}
             >
               Check out
             </button>
-            <button
-              onClick={() => dispatch({ type: "CLEAR" })}
-              className={Styles.clear}
-            >
+            <button onClick={() => dispatch(clear())} className={Styles.clear}>
               Clear
             </button>
           </div>
         </div>
       )}
-      {state.checkout && (
+      {cardState.checkout && (
         <div className={Styles.complete}>
           <h3>Check Out Successfully</h3>
           <Link to="/products">Buy More?</Link>
         </div>
       )}
-      {!state.checkout && state.itemsCount === 0 && (
+      {!cardState.checkout && cardState.itemsCount === 0 && (
         <div className={Styles.complete}>
           <h3>Want to Buy ?</h3>
           <Link to="/products">Back to Shop</Link>

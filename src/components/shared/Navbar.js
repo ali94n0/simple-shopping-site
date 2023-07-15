@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { BiCartAlt } from "react-icons/bi";
-import { CartContext } from "../../context/CartContextProvider";
+// import { CartContext } from "../../context/CartContextProvider";
 import Styles from "./Navbar.module.css";
+import { useSelector } from "react-redux";
 
 function Navbar(props) {
-  const { state } = useContext(CartContext);
+  const cardState = useSelector((state) => state.card);
   return (
     <div className={Styles.mainContainer}>
       <div className={Styles.container}>
@@ -15,7 +16,7 @@ function Navbar(props) {
         <div className={Styles.iconContainer}>
           <Link to="/cart">
             <BiCartAlt className={Styles.icon} />
-            <span>{state.itemsCount}</span>
+            <span>{cardState.itemsCount}</span>
           </Link>
         </div>
       </div>
